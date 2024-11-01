@@ -23,6 +23,9 @@ void chatterCallback(const sensor_msgs::JointState::ConstPtr& msg)
   for(i=0; i<6; i++)
   {
     //ROS_INFO("I heard: [%d]", uint((msg->position[i])/PI*180));
+    ROS_INFO("Position: [%d]", uint((msg->position[i])/PI*180));
+    ROS_INFO("Name: [%s]", std::string((msg->name[i])).c_str());
+
 
     _DataArray[std::string((msg->name[i]))]= uint((msg->position[i])/PI*180);
   }
