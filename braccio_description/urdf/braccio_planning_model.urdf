@@ -43,14 +43,18 @@
     <link name="link_2">
         <visual>
             <geometry>
-                <mesh filename="package://braccio_description/stl/braccio_shoulder.stl" scale="0.001 0.001 0.001" />
+                <mesh filename="package://braccio_description/stl/braccio_shoulder.stl" scale="0.001 0.001 0.00124" />
+<!-- Marc - was scaled 0.001 now 0.00124 to represent longer arm-->
+
             </geometry>
             <material name="orange" />
             <origin rpy="0 0 0" xyz="-0.0045 0.0055 -0.026" />
         </visual>
         <collision>
             <geometry>
-                <mesh filename="package://braccio_description/stl/braccio_shoulder.stl" scale="0.001 0.001 0.001" />
+
+<!-- Marc - was scaled 0.001 now 0.00124 to represent longer arm-->
+                <mesh filename="package://braccio_description/stl/braccio_shoulder.stl" scale="0.001 0.001 0.00124" />
             </geometry>
             <origin rpy="0 0 0" xyz="-0.0045 0.0055 -0.026" />
         </collision>
@@ -64,14 +68,16 @@
     <link name="link_3">
         <visual>
             <geometry>
-                <mesh filename="package://braccio_description/stl/braccio_elbow.stl" scale="0.001 0.001 0.001" />
+<!-- Marc - was scaled 0.001 now 0.00124 to represent longer arm-->
+                <mesh filename="package://braccio_description/stl/braccio_elbow.stl" scale="0.001 0.001 0.00124" />
             </geometry>
             <material name="orange" />
             <origin rpy="0 0 0" xyz="-0.0045 0.005 -0.025" />
         </visual>
         <collision>
             <geometry>
-                <mesh filename="package://braccio_description/stl/braccio_elbow.stl" scale="0.001 0.001 0.001" />
+<!-- Marc - was scaled 0.001 now 0.00124 to represent longer arm-->
+                <mesh filename="package://braccio_description/stl/braccio_elbow.stl" scale="0.001 0.001 0.00124" />
             </geometry>
             <origin rpy="0 0 0" xyz="-0.0045 0.005 -0.025" />
         </collision>
@@ -190,7 +196,8 @@
     <joint name="elbow_joint" type="revolute">
         <axis xyz="1 0 0" />
         <limit effort="1000.0" lower="0" upper="3.1416" velocity="1.0" />
-        <origin rpy="-1.5708 0 0" xyz="0 0 0.125" />
+    <!--Marc - Extending link Was: rpy="-1.5708 0 0" xyz="0 0 0.125"       -->
+        <origin rpy="-1.5708 0 0" xyz="0 0 0.155" />
         <parent link="link_2" />
         <child link="link_3" />
         <dynamics damping="0.1" friction="0.001" />
@@ -199,7 +206,8 @@
     <joint name="wrist_pitch_joint" type="revolute">
         <axis xyz="1 0 0" />
         <limit effort="1000.0" lower="0" upper="3.1416" velocity="1.0" />
-        <origin rpy="-1.5708 0 0" xyz="0 0 0.125" />
+    <!--Marc - Extending link Was: rpy="-1.5708 0 0" xyz="0 0 0.125"       -->
+        <origin rpy="-1.5708 0 0" xyz="0 0 0.155" />
         <parent link="link_3" />
         <child link="link_4" />
         <dynamics damping="0.1" friction="0.001" />
@@ -312,16 +320,16 @@
     </actuator>
   </transmission>
   <gazebo reference="link_1">
-    <material>Gazebo/Green</material>
+    <material>Gazebo/Blue</material>
   </gazebo>
   <gazebo reference="link_2">
-    <material>Gazebo/Orange</material>
+    <material>Gazebo/Blue</material>
   </gazebo>
   <gazebo reference="link_3">
     <material>Gazebo/Blue</material>
   </gazebo>
   <gazebo reference="link_4">
-    <material>Gazebo/Red</material>
+    <material>Gazebo/Blue</material>
   </gazebo>
   <gazebo reference="link_5">
     <material>Gazebo/Purple</material>
@@ -339,6 +347,7 @@
   <joint name="world_joint" type="fixed">
     <parent link="world"/>
     <child link="base_link"/>
-    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    <!--<origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>-->
+    <origin rpy="1.58 0.0 3.14" xyz="0.0 0.0 1.0"/>    
   </joint>
 </robot>
