@@ -13,9 +13,10 @@
 // aRadien/pi*180
 
 /**
- * This tutorial demonstrates simple receipt of messages over the ROS system.
+ * Modified by Marc and ChatGPT to add a second robot arm subscriber, processing, and publisher
  */
 std::map<std::string, int> _DataArray;
+std::map<std::string, int> _DataArray2;
 
 void chatterCallback(const sensor_msgs::JointState::ConstPtr& msg)
 {
@@ -23,13 +24,29 @@ void chatterCallback(const sensor_msgs::JointState::ConstPtr& msg)
   for(i=0; i<6; i++)
   {
     //ROS_INFO("I heard: [%d]", uint((msg->position[i])/PI*180));
-    ROS_INFO("Position: [%d]", uint((msg->position[i])/PI*180));
-    ROS_INFO("Name: [%s]", std::string((msg->name[i])).c_str());
+    ROS_INFO("Position1: [%d]", uint((msg->position[i])/PI*180));
+    ROS_INFO("Name1: [%s]", std::string((msg->name[i])).c_str());
 
 
     _DataArray[std::string((msg->name[i]))]= uint((msg->position[i])/PI*180);
   }
 }
+
+void chatterCallback2(const sensor_msgs::JointState::ConstPtr& msg)
+{
+  int i=0;
+  for(i=0; i<6; i++)
+  {
+    //ROS_INFO("I heard: [%d]", uint((msg->position[i])/PI*180));
+    ROS_INFO("Position2: [%d]", uint((msg->position[i])/PI*180));
+    ROS_INFO("Name2: [%s]", std::string((msg->name[i])).c_str());
+
+
+    _DataArray2[std::string((msg->name[i]))]= uint((msg->position[i])/PI*180);
+  }
+}
+
+
 
 int main(int argc, char **argv)
 {
@@ -68,24 +85,38 @@ int main(int argc, char **argv)
    * away the oldest ones.
    */
   ros::Subscriber sub = n.subscribe("joint_states", 6, chatterCallback);
-
   ros::Publisher pub = n.advertise<std_msgs::UInt8MultiArray>("joint_array", 6);
+  
+    // Subscriber and Publisher for the second robot arm's joint states
+  ros::Subscriber sub2 = n.subscribe("joint_states2", 6, chatterCallback);
+  ros::Publisher pub2 = n.advertise<std_msgs::UInt8MultiArray>("joint_array2", 6);
 
   ros::Rate loop_rate(10);
 
   while (ros::ok())
   {
-    std_msgs::UInt8MultiArray array;
-    //Clear array
+    std_msgs::UInt8MultiArray array, array2;
+    //Clear and prepare the data array for the first robot arm
     array.data.clear();
-
-    array.data.push_back(180-_DataArray["base_joint"]);
+//hacked by Marc
+    array.data.push_back(_DataArray["base_joint"]); //hacked to align with gazebo sim
     array.data.push_back(_DataArray["shoulder_joint"]);
-    array.data.push_back(_DataArray["elbow_joint"]);
-    array.data.push_back(_DataArray["wrist_pitch_joint"]);
+    array.data.push_back(180-_DataArray["elbow_joint"]);
+    array.data.push_back(_DataArray["wrist_pitch_joint"]);//hacked to align with gazebo sim
     array.data.push_back(_DataArray["wrist_roll_joint"]);
     array.data.push_back(_DataArray["gripper_joint"]);
     pub.publish(array);
+
+    array2.data.clear();
+    array2.data.push_back(_DataArray2["base_joint"]);
+    array2.data.push_back(_DataArray2["shoulder_joint"]);
+    array2.data.push_back(180 - _DataArray2["elbow_joint"]);
+    array2.data.push_back(_DataArray2["wrist_pitch_joint"]);
+    array2.data.push_back(_DataArray2["wrist_roll_joint"]);
+    array2.data.push_back(_DataArray2["gripper_joint"]);
+    pub2.publish(array2);
+
+
 
     ros::spinOnce();
 
